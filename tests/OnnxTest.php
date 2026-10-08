@@ -187,7 +187,7 @@ class OnnxTest extends TestCase
         $spans = $this->recognise('Sietske sprak met Bouwmeester.', [
             ['entity_group' => 'PER', 'word' => 'Bouwmeester'],
             ['entity_group' => 'PER', 'word' => 'Sietske'],
-        ]);
+        ])->resolved();
 
         $this->assertCount(2, $spans);
         $this->assertSame(['Sietske', 'Bouwmeester'], array_map(fn ($s) => $s->text, iterator_to_array($spans)));

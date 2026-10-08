@@ -64,7 +64,7 @@ final readonly class Onnx implements Recogniser
             }
         }
 
-        return $spans->resolved();
+        return $spans;
     }
 
     /**
