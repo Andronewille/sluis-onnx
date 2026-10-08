@@ -24,7 +24,7 @@ $sluis = Sluis::nederlands()->plus(new Onnx(new Transformers($profile, '/models'
 ```
 
 This repository is a read-only mirror, split out of
-[Andronewille/sluis](https://github.com/Andronewille/sluis). What the model was measured to find
-and to miss, the issues and the tests are all there.
+[Andronewille/sluis](https://github.com/Andronewille/sluis). The issues and the tests are there,
+and so is [what the model was measured to find and to miss](https://github.com/Andronewille/sluis/blob/main/docs/design.md#the-model).
 
 Licensed under the [EUPL-1.2](LICENSE).
