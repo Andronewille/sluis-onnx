@@ -13,7 +13,7 @@ namespace Sluis\Onnx;
 interface Pipeline
 {
     /**
-     * @return list<array{entity_group: string, word: string, score: float}>
+     * @return list<array{entity_group: string, word: string, score?: float}>
      */
     public function __invoke(string $text): array;
 }

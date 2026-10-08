@@ -232,4 +232,19 @@ class OnnxTest extends TestCase
         $this->assertSame('Vorige week was ik in stad1mask.', $masked->text);
         $this->assertSame($text, $sluis->unmask($masked->text, $masked->vault)->text);
     }
+
+    /**
+     * A pipeline that answers without a score is sure enough to have answered.
+     * Reading the missing score as nothing put it under every floor: the name
+     * was skipped, the text came back untouched, and the run reported success.
+     */
+    public function test_an_answer_without_a_score_is_still_masked(): void
+    {
+        $onnx = new Onnx(new FakePipeline([[['entity_group' => 'PER', 'word' => 'Sietske']]]), Profile::ner());
+
+        $spans = $onnx->recognise('Groeten van Sietske uit het dorp.');
+
+        $this->assertCount(1, $spans);
+        $this->assertSame('Sietske', $spans->first()->text);
+    }
 }

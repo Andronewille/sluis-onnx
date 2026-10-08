@@ -44,15 +44,18 @@ final class Transformers implements Pipeline
 
     /**
      * One answer of the runtime, in the shape `Onnx` places. A missing word or
-     * label reads as empty, as it always did; one that is there and is not text is
-     * refused, because the only other thing to do with it is drop what the model
-     * found.
+     * label reads as empty, as it always did; an answer that is not a list of
+     * fields, or a field that is there and is not text, is refused, because the
+     * only other thing to do with it is drop what the model found.
      *
      * @return array{entity_group: string, word: string, score: float}
      */
     private function entity(mixed $entity): array
     {
-        $entity = is_array($entity) ? $entity : [];
+        if (! is_array($entity)) {
+            throw new RuntimeException('The model answered in a shape Sluis does not read.');
+        }
+
         $label = $entity['entity_group'] ?? $entity['entity'] ?? '';
         $word = $entity['word'] ?? '';
         $score = $entity['score'] ?? 1.0;

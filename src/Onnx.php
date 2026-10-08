@@ -40,7 +40,7 @@ final readonly class Onnx implements Recogniser
             $cursor = 0;
 
             foreach (($this->pipeline)($window) as $entity) {
-                if ($entity['score'] < $this->profile->floor) {
+                if (($entity['score'] ?? 1.0) < $this->profile->floor) {
                     continue;
                 }
 
@@ -57,7 +57,7 @@ final readonly class Onnx implements Recogniser
                     $offset + $at,
                     $found,
                     'model',
-                    $entity['score'],
+                    $entity['score'] ?? 1.0,
                 ));
 
                 $cursor = $at + strlen($found);

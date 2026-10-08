@@ -17,7 +17,7 @@ final class FakePipeline implements Pipeline
     /** @var list<string> every text it was handed, in order */
     public array $saw = [];
 
-    /** @param array<int, list<array{entity_group: string, word: string, score: float}>> $answers */
+    /** @param array<int, list<array{entity_group: string, word: string, score?: float}>> $answers */
     public function __construct(private array $answers) {}
 
     /** @param list<array{entity_group: string, word: string, score?: float}> $entities */
