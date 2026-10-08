@@ -223,7 +223,7 @@ class OnnxTest extends TestCase
     public function test_a_piece_of_a_word_takes_the_whole_word_and_comes_back(): void
     {
         $text = 'Vorige week was ik in Geertruidenberg.';
-        $sluis = Sluis::with(new Onnx(FakePipeline::answering([
+        $sluis = new Sluis(new Onnx(FakePipeline::answering([
             ['entity_group' => 'LOC', 'word' => 'truidenberg'],
         ]), Profile::ner()));
 
