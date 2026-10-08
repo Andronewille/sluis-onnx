@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sluis\Onnx;
 
+use Codewithkyrian\Transformers\Pipelines\Pipeline as Model;
 use Codewithkyrian\Transformers\Transformers as Runtime;
 use RuntimeException;
 
@@ -21,7 +24,7 @@ final class Transformers implements Pipeline
     /** What the runtime reads to load a model, and so what it would fetch if one were missing. */
     private const FILES = ['config.json', 'tokenizer.json', 'tokenizer_config.json', 'onnx/model_quantized.onnx'];
 
-    private mixed $pipeline = null;
+    private ?Model $pipeline = null;
 
     public function __construct(
         private readonly Profile $profile,
@@ -30,17 +33,38 @@ final class Transformers implements Pipeline
 
     public function __invoke(string $text): array
     {
-        return array_values(array_map(
-            fn (array $entity) => [
-                'entity_group' => (string) ($entity['entity_group'] ?? $entity['entity'] ?? ''),
-                'word' => (string) ($entity['word'] ?? ''),
-                'score' => (float) ($entity['score'] ?? 1.0),
-            ],
-            ($this->pipeline())($text, aggregationStrategy: 'average'),
-        ));
+        $entities = ($this->pipeline())($text, aggregationStrategy: 'average');
+
+        if (! is_array($entities)) {
+            throw new RuntimeException('The model did not answer with a list of what it found.');
+        }
+
+        return array_values(array_map($this->entity(...), $entities));
     }
 
-    private function pipeline(): mixed
+    /**
+     * One answer of the runtime, in the shape `Onnx` places. A missing word or
+     * label reads as empty, as it always did; one that is there and is not text is
+     * refused, because the only other thing to do with it is drop what the model
+     * found.
+     *
+     * @return array{entity_group: string, word: string, score: float}
+     */
+    private function entity(mixed $entity): array
+    {
+        $entity = is_array($entity) ? $entity : [];
+        $label = $entity['entity_group'] ?? $entity['entity'] ?? '';
+        $word = $entity['word'] ?? '';
+        $score = $entity['score'] ?? 1.0;
+
+        if (! is_string($label) || ! is_string($word) || ! is_numeric($score)) {
+            throw new RuntimeException('The model answered in a shape Sluis does not read.');
+        }
+
+        return ['entity_group' => $label, 'word' => $word, 'score' => (float) $score];
+    }
+
+    private function pipeline(): Model
     {
         if ($this->pipeline !== null) {
             return $this->pipeline;

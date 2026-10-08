@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sluis\Onnx;
 
 use Sluis\Application\Ports\Recogniser;
@@ -38,7 +40,7 @@ final readonly class Onnx implements Recogniser
             $cursor = 0;
 
             foreach (($this->pipeline)($window) as $entity) {
-                if (($entity['score'] ?? 1.0) < $this->profile->floor) {
+                if ($entity['score'] < $this->profile->floor) {
                     continue;
                 }
 
@@ -55,7 +57,7 @@ final readonly class Onnx implements Recogniser
                     $offset + $at,
                     $found,
                     'model',
-                    (float) ($entity['score'] ?? 1.0),
+                    $entity['score'],
                 ));
 
                 $cursor = $at + strlen($found);

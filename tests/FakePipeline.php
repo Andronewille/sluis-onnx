@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sluis\Onnx\Tests;
 
 use Sluis\Onnx\Pipeline;
