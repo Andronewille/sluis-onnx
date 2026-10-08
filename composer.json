@@ -1,0 +1,40 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "andronewille/sluis-onnx",
+    "description": "A local ONNX model as a Sluis recogniser: the names, streets and towns that no pattern and no list can find.",
+    "keywords": ["pii", "onnx", "ner", "dutch", "offline"],
+    "license": "EUPL-1.2",
+    "homepage": "https://github.com/Andronewille/sluis",
+    "support": {
+        "issues": "https://github.com/Andronewille/sluis/issues",
+        "source": "https://github.com/Andronewille/sluis"
+    },
+    "type": "library",
+    "repositories": [
+        {"type": "path", "url": "../core*"}
+    ],
+    "require": {
+        "php": "^8.3",
+        "andronewille/sluis": "^0.1@dev",
+        "codewithkyrian/transformers": "^0.6",
+        "ext-ffi": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sluis\\Onnx\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "codewithkyrian/platform-package-installer": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
